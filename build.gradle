@@ -1,0 +1,174 @@
+/*
+ *  MiniGame Player Queue is a Minecraft plugin for mini-game modes.
+ *  Copyright (C) 2020-2021 RoyalBlueRanger
+ *
+ *  Licensed under MIT License.  Please see the LICENSE document 
+ *  as found in the root directory of this project.
+ *
+ */
+import java.text.SimpleDateFormat
+import java.util.Date
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName = 'MiniGamePlayerQueue'
+group = 'com.royalblueranger.mgpq'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "http://maven.sk89q.com/repo/" }
+   //  maven { url "https://mvnrepository.com/artifact/org.apache.commons/commons-lang3" }
+
+    maven { url = "https://hub.spigotmc.org/nexus/content/groups/public" }
+    
+    maven { url = "https://repo.lucko.me/" }
+    maven { url = "https://repo.codemc.org/repository/maven-public/" }
+    maven { url = "https://repo.inventivetalent.org/content/groups/public/" }
+    // maven { url = 'http://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    
+    
+    maven { url = "https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc" }
+    
+    // maven { url = 'https://mvnrepository.com/artifact/com.github.cryptomorin' }
+  
+    // maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+    // maven { url = "http://nexus.hc.to/content/repositories/pub_releases" }
+    // maven { url = "http://repo.mvdw-software.be/content/groups/public/" }
+    // maven { url = 'https://maven.enginehub.org/repo/' }
+    
+    jcenter()
+}
+
+configurations {
+    deployerJars
+}
+
+dependencies {
+
+//    implementation 'org.apache.commons:commons-lang3:3.10'
+//    implementation 'com.google.guava:guava:19.0'
+//    implementation 'com.google.code.gson:gson:2.8.6'
+    
+//    implementation 'org.bstats:bstats-bukkit:1.5'
+//    implementation 'org.inventivetalent.spiget-update:bukkit:1.4.2-SNAPSHOT'
+//	  implementation 'org.apache.commons:commons-lang3:3.9'
+
+//    implementation 'me.clip:placeholderapi:2.9.1'
+    
+    implementation 'net.luckperms:api:5.0'
+//    implementation 'me.lucko.luckperms:luckperms-api:4.0'
+    
+    compileOnly 'org.xerial:sqlite-jdbc:3.32.3.2'
+    
+//	implementation 'com.github.cryptomorin:XSeries:7.5.4'
+//	implementation 'com.github.cryptomorin:XSeries:7.2.1'
+//	implementation 'com.github.cryptomorin:XSeries:6.3.2.1'
+
+	// 1.9.4-R0.1-SNAPSHOT has been the version used for a long time:
+//    compileOnly 'org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT'
+	// 1.12.2-R0.1-SNAPSHOT works well:
+//    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+	// 1.13.2 fails since deprecated functions have been removed.
+    compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
+    
+    compileOnly 'net.milkbowl.vault:VaultAPI:1.6'
+
+    testCompile 'junit:junit:4.12'
+}
+
+
+/* Two different ways to enable utf-8 encoding within gradle, but not sure its
+ * even needed at this time.  Keeping for a few builds to make sure all is ok.
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+   options.encoding = 'UTF-8'
+}
+*/
+
+ 
+println """
+==========================================================================
+You are building the MiniGame Player Queue plugin 
+  Version:    ${project.version} 
+  Build time: ${getCurrentTimestamp()}
+
+Output files are located in /build/libs
+The runnable JAR is usually named MiniGamePlayerQueue.jar
+Example: The spigot build artifact is build/libs/MiniGamePlayerQueue.jar
+==========================================================================
+"""
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
+
+}
+
+
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+def getCurrentTimestamp()
+{
+  SimpleDateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss")
+  return df.format (new Date())
+}
+
+
+/*
+clean {
+    delete "${rootProject.name}.jar"
+}
+*/
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        expand 'version': project.version
+        include 'plugin.yml', 'config.yml'
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'plugin.yml', 'config.yml'
+    }
+}
+
+shadowJar {
+    dependencies {
+//    	include(dependency('org.xerial:sqlite-jdbc:3.32.3.2'))
+    	
+//        include(dependency('com.google.code.gson:gson:2.8.6'))
+//        include(dependency('org.apache.commons:commons-lang3:3.10'))
+//        include(dependency('me.clip:placeholderapi:2.9.1'))
+//        include(dependency('org.bstats:bstats-bukkit:1.5'))
+//        include(dependency('org.inventivetalent.spiget-update:bukkit:1.4.2-SNAPSHOT'))
+//        include(dependency('com.github.cryptomorin:XSeries:7.5.4'))
+    }
+
+//    relocate 'org.bstats.bukkit', 'com.royalblueranger.mgpq.spigot'
+//    relocate 'org.inventivetalent.update.spiget', 'com.royalblueranger.mgpq.spiget'
+//    relocate 'com.cryptomorin', 'com.royalblueranger.mgpq.cryptomorin'
+
+    classifier ''
+    archiveVersion = ''
+    
+    minimize()
+}
+
+build.dependsOn(shadowJar)
+

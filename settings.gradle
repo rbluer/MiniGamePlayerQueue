@@ -1,0 +1,13 @@
+/*
+ *  MiniGame Player Queue is a Minecraft plugin for mini-game modes.
+ *  Copyright (C) 2020-2021 RoyalBlueRanger
+ *
+ *  Licensed under MIT License.  Please see the LICENSE document 
+ *  as found in the root directory of this project.
+ *
+ */
+
+
+rootProject.name = 'MiniGamePlayerQueue'
+/* include 'mgpq-core' */
+

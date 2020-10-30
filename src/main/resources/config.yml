@@ -1,0 +1,12 @@
+#=========================================
+#  MiniGame Player Queue plugin 
+#  Version:    ${version} 
+#  Build time: - - -
+#=========================================
+
+debug: false
+
+//check-updates: true
+//send-metrics: true
+
+

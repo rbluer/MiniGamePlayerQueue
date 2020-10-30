@@ -1,0 +1,28 @@
+name: MiniGamePlayerQueue
+main: com.royalblueranger.mgpq.MiniGamePlayerQueue
+version: "${version}"
+
+description: MiniGame Player Queue is a Minecraft plugin for mini-game modes.
+website: https://royalblueranger.com
+softdepend: [Essentials, Vault, LuckPerms, Multiverse-Core, Multiworld, MVdWPlaceholderAPI, PlaceholderAPI, GemsEconomy, TokenEnchant]
+
+license: Copyright (C) 2020-2021 RoyalBlueRanger. MIT License. 
+
+# Older versions than 1.13 will ignore this, but this will allow 1.13 and up to use newer block types?
+api-version: 1.13
+
+
+logs:
+  color: true
+  debug: true
+
+commands:
+
+  mgpq:
+    description: A command
+    usage: /mgpq
+
+  mgpqGames:
+    description: A command
+    usage: /mgpqGames
+
