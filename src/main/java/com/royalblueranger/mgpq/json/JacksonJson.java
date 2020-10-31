@@ -177,29 +177,48 @@ public class JacksonJson
 	{
 		ObjectMapper mapper = getJsonObjectMapper();
 		
+		// Get a File object for both the original file and the new temp file.
 		File file = outputFile.toFile();
+		File renamedFile = null;
 		File tempFile = new File( file.getParentFile(), file.getName() + ".tmp");
 		
 		try
 		{
+			// Write the data to the temp file
 			mapper.writeValue( tempFile, obj );
 			
 			if ( file.exists() )
 			{
+				// the write should be completed and was successful; if it wasn't an exception would have been thrown
+				
+				// Construct a the temp file name for the original file using it's last modified date:
 				long lastModified = file.lastModified();
 				Date lmDate = new Date(lastModified);
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 				String suffix = "_" + sdf.format( lmDate ) + ".json";
 				String fileName = file.getName().replace( ".json", suffix );
-				File renamedFile = new File( file.getParentFile(), fileName);
+				
+				// Create a File object with the new temp file name for the original file
+				renamedFile = new File( file.getParentFile(), fileName);
+				
+				// rename the original file
 				file.renameTo( renamedFile );
 				
 				System.err.println( "JacksonJson.writeJsonFile: Existing file named to: " + renamedFile.getAbsolutePath() );
 			}
-			
-			Files.deleteIfExists( outputFile );
 
 			tempFile.renameTo( file );
+			
+			// If there was an original file, then delete the renamed version of it
+			if ( renamedFile != null && renamedFile.exists() ) {
+				boolean deleted = renamedFile.delete();
+				
+				if ( !deleted ) {
+					
+					System.err.println( "JacksonJson.writeJsonFile: Saved file failure: Could not remove the " +
+							"original file for an unknown reason. " + renamedFile.getAbsolutePath() );
+				}
+			}
 			
 			System.err.println( "JacksonJson.writeJsonFile: Saved file: " + file.getAbsolutePath() );
 		}
