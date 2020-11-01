@@ -19,6 +19,8 @@ public class MiniGamePlayerQueue
 	extends RBRPlugIn
 {
 	private static MiniGamePlayerQueue instance;
+	
+	
 
 	/**
 	 * <p>Warning: constructor is public only so the normal plugin manager can instantiate the class.
@@ -62,13 +64,16 @@ public class MiniGamePlayerQueue
     @Override
     public void onEnable()
     {
-    	log( "Initializing..." );
+    	super.onEnable();
+    	
 
-    	initializeDb( "MiniGamePlayerQueue" );
+    	
+    	
 
 
 //    	getServer().getPluginManager().registerEvents( this, this );
 
+    	
 
 //    	this.getCommand("RBRTpGrinder").setExecutor(new CommandRBRTpGrinder());
 
@@ -85,7 +90,8 @@ public class MiniGamePlayerQueue
     @Override
     public void onDisable()
     {
-
+    	super.onDisable();
+    	
     	// Flush any unsaved database data:
 
     	log( "Finished shutting down." );
