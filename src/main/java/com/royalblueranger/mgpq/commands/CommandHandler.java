@@ -51,7 +51,9 @@ public class CommandHandler {
 
 	public static final String COMMAND_PRIMARY_ROOT_COMMAND = "pq";
 	public static final String COMMAND_FALLBACK_PREFIX = "mgpq";
+	public static final String COMMAND_HELP_TEXT = "help";
 
+	
 	private Map<String, BaseCommands> registeredCommands;
 	
     private RBRPlugIn plugin;
@@ -60,8 +62,6 @@ public class CommandHandler {
     											new HashMap<Class<?>, ArgumentHandler<?>>();
     
     private Map<PluginCommand, RootCommand> rootCommands = new HashMap<>();
-
-    public static final String COMMAND_HELP_TEXT = "help";
 
     
 	private List<PluginCommand> commands = new ArrayList<>();
@@ -312,7 +312,6 @@ public class CommandHandler {
             	Set<PluginCommand> rootKeys = getRootCommands().keySet();
             	
             	for ( PluginCommand rootKey : rootKeys ) {
-//            		String rootCmd = "/" + rootKey.getLabelRegistered();
             		String rootCmd = rootKey.getUsage();
             		
             		rootCommandSet.add( rootCmd );
@@ -465,7 +464,6 @@ public class CommandHandler {
             for (int i = 1; i < identifiers.length; i++) {
                 String suffix = identifiers[i];
                 
-                // NOTE: There appears to be an issue with the following command... it's not returning prexisting suffixes:
                 if (mainCommand.doesSuffixCommandExist(suffix)) {
                     mainCommand = mainCommand.getSuffixCommand(suffix);
                 } else {
@@ -508,7 +506,7 @@ public class CommandHandler {
     	
         RootCommand rootCommand = rootCommands.get(command);
         if (rootCommand == null) {
-        	// plugin.log( "onCommand: " + command.getLabel() + " : 2 : No root command found. " );
+        	plugin.logError( "CommandHandler.onCommand(): " + command.getLabel() + " : No root command found. " );
             return false;
         }
 

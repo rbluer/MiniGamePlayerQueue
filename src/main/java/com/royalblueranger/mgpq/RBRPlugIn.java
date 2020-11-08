@@ -14,7 +14,8 @@ import com.royalblueranger.mgpq.db.SQLite;
 /**
  * <p>This abstract class is intended to handle more of the messy plugin stuff
  * so the main class for this plugin can focus more on the plugin specific 
- * details.  Examples of the messy stuff would be logging or command registration.
+ * details.  Examples of the messy stuff would be logging, database initialization,
+ * or command registration.
  * </p>
  *
  */
@@ -37,7 +38,9 @@ public abstract class RBRPlugIn
     }
 
     
-
+    /**
+     * Fired when the plugin is enabled.
+     */
     @Override
     public void onEnable()
     {
@@ -52,8 +55,6 @@ public abstract class RBRPlugIn
 
     	
 
-//    	this.getCommand("RBRTpGrinder").setExecutor(new CommandRBRTpGrinder());
-
 
 
         // Load all existing grinders:
@@ -67,7 +68,6 @@ public abstract class RBRPlugIn
     @Override
     public void onDisable()
     {
-
     	getCommandHandler().unregisterAllCommands();
     	
     	// Flush any unsaved database data:
@@ -80,7 +80,6 @@ public abstract class RBRPlugIn
     {
     	// create, register, build, and migrate the database if needed:
     	this.db = new SQLite( this, databaseName );
-    	
     }
 
     
@@ -92,18 +91,23 @@ public abstract class RBRPlugIn
         return getDataFolder();
     }
     
+    private String logPrefix() {
+    	return ChatColor.GRAY + "[" +
+    			ChatColor.AQUA + "Blue's" +
+    			ChatColor.WHITE + " MGPQ" +
+    			ChatColor.GRAY + "] ";
+    }
+    
     /**
      * Note that you cannot color normal server log entries; only calls to this function.
      *
      * @param message
      */
-    public void log( String message )
+    public void log( String message, Object... args )
     {
-    	message =
-    			ChatColor.GRAY + "[" +
-    			ChatColor.AQUA + "Blue's" +
-    			ChatColor.WHITE + " MGPQ" +
-    			ChatColor.GRAY + "] " + message;
+    	message = logPrefix() + 
+    			String.format( message, args );
+    	
     	if ( !logsColor )
     	{
     		message = ChatColor.stripColor( message );
@@ -112,24 +116,26 @@ public abstract class RBRPlugIn
     	Bukkit.getConsoleSender().sendMessage( message );
     }
 
-    public void logDebug( String message )
+    public void logDebug( String message, Object... args )
     {
     	if ( logsDebug )
     	{
-    		message =  ChatColor.RED + "[Debug]" + ChatColor.GREEN + " " + message;
+    		message =  ChatColor.RED + "[Debug]" + ChatColor.GREEN + " " + 
+						String.format( message, args );
     		log( message );
     	}
     }
     
-    public String logError( String message )
+    public String logError( String message, Object... args )
     {
-    	message =  ChatColor.RED + "[Error]" + ChatColor.LIGHT_PURPLE + " " + message;
+    	message =  ChatColor.RED + "[Error]" + ChatColor.LIGHT_PURPLE + " " +
+    					String.format( message, args );
     	log( message );
     	return message;
     }
-    public String logError( CommandSender sender, String message )
+    public String logError( CommandSender sender, String message, Object... args )
     {
-    	message =  logError( message );
+    	message =  logError( message, args );
     	sender.sendMessage( message );
     	return message;
     }
@@ -140,10 +146,6 @@ public abstract class RBRPlugIn
 	}
 	
 
-//    public void registerCommand(PluginCommand command) {
-//    	getCommandHandler().registerCommand( command );
-//    }
-	
     /**
      * <p>This initializes the command handler, and the related command maps,
      * if the commandHander class variable is null.
