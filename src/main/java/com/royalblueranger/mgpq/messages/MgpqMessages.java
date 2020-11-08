@@ -2,6 +2,12 @@ package com.royalblueranger.mgpq.messages;
 
 import org.bukkit.command.CommandSender;
 
+/**
+ * <p>This class contains the messages that are to be used for the plugin.
+ * It's setup to be able to allow the eventual use of external language support.
+ * </p>
+ *
+ */
 public class MgpqMessages {
 	
 	private static MgpqMessages instance;

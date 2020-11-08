@@ -39,39 +39,55 @@ import com.royalblueranger.mgpq.messages.MgpqMessages.Messages;
 public class RegisteredCommand {
 
     private String label;
+    private CommandHandler handler;
     private RegisteredCommand parent;
+    
     private String description;
     private String[] permissions;
     private String[] altPermissions;
     private boolean onlyPlayers;
     private Method method;
     private Object methodInstance;
-    private CommandHandler handler;
 
     private boolean set = false;
 
     private ArrayList<ExecutableArgument> methodArguments = new ArrayList<ExecutableArgument>();
     private ArrayList<CommandArgument> arguments = new ArrayList<CommandArgument>();
-    private ArrayList<RegisteredCommand> suffixes = new ArrayList<RegisteredCommand>();
-    private ArrayList<Flag> flags = new ArrayList<Flag>();
-    private WildcardArgument wildcard;
-    private Map<String, Flag> flagsByName = new LinkedHashMap<String, Flag>();
-    private Map<String, RegisteredCommand> suffixesByName =
-        new HashMap<String, RegisteredCommand>();
 
+    private WildcardArgument wildcard;
+    
+    private ArrayList<Flag> flags = new ArrayList<Flag>();
+    private Map<String, Flag> flagsByName = new LinkedHashMap<String, Flag>();
+
+    private ArrayList<RegisteredCommand> suffixes = new ArrayList<RegisteredCommand>();
+    private Map<String, RegisteredCommand> suffixesByName = new HashMap<String, RegisteredCommand>();
+
+    
     RegisteredCommand(String label, CommandHandler handler, RegisteredCommand parent) {
         this.label = label;
         this.handler = handler;
         this.parent = parent;
     }
 
+    /**
+     * The suffix is converted to all lower case before adding to the map.
+     *  
+     * @param suffix
+     * @param command
+     */
     void addSuffixCommand(String suffix, RegisteredCommand command) {
         suffixesByName.put(suffix.toLowerCase(), command);
         suffixes.add(command);
     }
 
+    /**
+     * The suffix is converted to all lower case before checking to see if it exists in the map.
+     * 
+     * @param suffix
+     * @return
+     */
     boolean doesSuffixCommandExist(String suffix) {
-        return suffixesByName.get(suffix) != null;
+        return suffixesByName.containsKey( suffix.toLowerCase() );
     }
     
     public String getCompleteLabel() {
@@ -101,7 +117,7 @@ public class RegisteredCommand {
 
         if (args.length > 0) {
             String suffixLabel = args[0].toLowerCase();
-            if (suffixLabel.equals(handler.getHelpSuffix())) {
+            if (suffixLabel.equals(CommandHandler.COMMAND_HELP_TEXT)) {
                 sendHelpMessage(sender);
                 return;
             }
@@ -109,11 +125,6 @@ public class RegisteredCommand {
             RegisteredCommand command = suffixesByName.get(suffixLabel);
             if (command == null) {
                 
-//                Output.get().logError( "### #### RegisteredCommands.execute : 1  " +
-//                		"if(command == null) ::  args.length = " + 
-//                			(args == null ? "null" : args.length) +
-//                			"  args[0] == " + args[0]);
-
                 executeMethod(sender, args);
             } else {
                 String[] nargs = new String[args.length - 1];

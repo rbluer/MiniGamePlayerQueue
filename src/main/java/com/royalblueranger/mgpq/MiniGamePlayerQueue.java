@@ -1,16 +1,9 @@
 package com.royalblueranger.mgpq;
 
+import com.royalblueranger.mgpq.command.CommandsMgpqCore;
+
 /**
- *
- * Ideas for working with mobs:
- *    https://github.com/NerdNu/MobLimiter/blob/master/src/nu/nerd/moblimiter/EntityHelper.java
- *
- *
- * Note: metadata does not persist.  Need to use an internal mechanism to keep track of the locations
- * of the various grinders and their stats.
- *
- * YamlConfiguration.set("index", Map<List<?, ?>> and YamlConfiguration#getMapList<?, ?>
- *
+ * 
  * @author RoyalBlueRanger
  *
  */
@@ -31,7 +24,10 @@ public class MiniGamePlayerQueue
 	{
 		super();
 
-		MiniGamePlayerQueue.instance = this;
+		if ( MiniGamePlayerQueue.instance == null ) {
+			
+			MiniGamePlayerQueue.instance = this;
+		}
 	}
 
 	/**
@@ -66,7 +62,9 @@ public class MiniGamePlayerQueue
     {
     	super.onEnable();
     	
-
+    	// Register all classes that contains commands. They can always be accessed 
+    	// through getCommandHandler().getRegisteredCommands() with the cmdGroup.
+    	getCommandHandler().registerCommands( new CommandsMgpqCore() );
     	
     	
 
@@ -74,14 +72,6 @@ public class MiniGamePlayerQueue
 //    	getServer().getPluginManager().registerEvents( this, this );
 
     	
-
-//    	this.getCommand("RBRTpGrinder").setExecutor(new CommandRBRTpGrinder());
-
-
-
-        // Load all existing grinders:
-        //grinders = getDb().loadAllGrinders();
-
     }
 
     /**
@@ -90,12 +80,11 @@ public class MiniGamePlayerQueue
     @Override
     public void onDisable()
     {
-    	super.onDisable();
     	
-    	// Flush any unsaved database data:
 
-    	log( "Finished shutting down." );
 
+    	// Shut down the core components after items registered in this class
+    	super.onDisable();
     }
 
 

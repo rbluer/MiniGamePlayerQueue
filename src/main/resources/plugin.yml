@@ -4,7 +4,7 @@ version: "${version}"
 
 description: MiniGame Player Queue is a Minecraft plugin for mini-game modes.
 website: https://royalblueranger.com
-softdepend: [Essentials, Vault, LuckPerms, Multiverse-Core, Multiworld, MVdWPlaceholderAPI, PlaceholderAPI, GemsEconomy, TokenEnchant]
+softdepend: [Essentials, Vault, LuckPerms, PlaceholderAPI, GemsEconomy, TokenEnchant]
 
 license: Copyright (C) 2020-2021 RoyalBlueRanger. MIT License. 
 

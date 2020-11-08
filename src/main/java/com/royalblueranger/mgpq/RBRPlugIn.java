@@ -1,34 +1,27 @@
 package com.royalblueranger.mgpq;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.royalblueranger.mgpq.commands.Command;
 import com.royalblueranger.mgpq.commands.CommandHandler;
-import com.royalblueranger.mgpq.commands.PluginCommand;
 import com.royalblueranger.mgpq.db.SQLite;
 
 
-
-
-
+/**
+ * <p>This abstract class is intended to handle more of the messy plugin stuff
+ * so the main class for this plugin can focus more on the plugin specific 
+ * details.  Examples of the messy stuff would be logging or command registration.
+ * </p>
+ *
+ */
 public abstract class RBRPlugIn
 	extends JavaPlugin
 {
-	private List<PluginCommand> commands = new ArrayList<>();
 	private CommandHandler commandHandler;
-	private Field knownCommands;
-	private Field commandMap;
 	
 	private boolean logsColor = true;
 	private boolean logsDebug = true;
@@ -50,10 +43,9 @@ public abstract class RBRPlugIn
     {
     	log( "Initializing..." );
 
-    	initializeDb( "MiniGamePlayerQueue" );
+//    	initializeDb( "MiniGamePlayerQueue" );
     	
-    	initCommandMap();
-    	this.commandHandler = new CommandHandler( this );
+    	
 
 
 //    	getServer().getPluginManager().registerEvents( this, this );
@@ -76,6 +68,8 @@ public abstract class RBRPlugIn
     public void onDisable()
     {
 
+    	getCommandHandler().unregisterAllCommands();
+    	
     	// Flush any unsaved database data:
 
     	log( "Finished shutting down." );
@@ -87,9 +81,17 @@ public abstract class RBRPlugIn
     	// create, register, build, and migrate the database if needed:
     	this.db = new SQLite( this, databaseName );
     	
-    	this.commandHandler = new CommandHandler( this );
     }
 
+    
+    public String getPluginVersion() {
+        return getDescription().getVersion();
+    }
+
+    public File getPluginDirectory() {
+        return getDataFolder();
+    }
+    
     /**
      * Note that you cannot color normal server log entries; only calls to this function.
      *
@@ -99,7 +101,6 @@ public abstract class RBRPlugIn
     {
     	message =
     			ChatColor.GRAY + "[" +
-    			ChatColor.WHITE + "Royal" +
     			ChatColor.AQUA + "Blue's" +
     			ChatColor.WHITE + " MGPQ" +
     			ChatColor.GRAY + "] " + message;
@@ -139,81 +140,22 @@ public abstract class RBRPlugIn
 	}
 	
 
-
-    public void registerCommand(PluginCommand command) {
-        try {
-        	org.bukkit.command.Command cmd = new org.bukkit.command.Command(command.getLabel(), command.getDescription(), command.getUsage(),
-                    							Collections.emptyList()) {
-
-                    @Override 
-                    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-                        if (sender instanceof org.bukkit.entity.Player) 
-                        {
-                            return getCommandHandler()
-                                .onCommand( (org.bukkit.entity.Player) sender, command, commandLabel, args);
-                        }
-                        return getCommandHandler()
-                            .onCommand( sender, command, commandLabel, args);
-                        
-                    }
-
-			      
-            };
-        	
-            @SuppressWarnings( "unused" )
-			boolean success = 
-            			((SimpleCommandMap) commandMap.get(Bukkit.getServer()))
-            				.register(command.getLabel(), "mgpq", cmd );
-            
-            commands.add(command);
-            
-//            if ( !success ) {
-//            	Output.get().logInfo( "SpigotPlatform.registerCommand: %s  " +
-//            			"Duplicate command. Fall back to Prison: [%s] ", command.getLabel(), 
-//            			cmd.getLabel() );
-//            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void registerCommand(PluginCommand command) {
+//    	getCommandHandler().registerCommand( command );
+//    }
 	
+    /**
+     * <p>This initializes the command handler, and the related command maps,
+     * if the commandHander class variable is null.
+     * </p>
+     * 
+     */
     public CommandHandler getCommandHandler() {
+    	if ( commandHandler == null ) {
+    		
+    		this.commandHandler = new CommandHandler( this );
+    	}
         return commandHandler;
     }
     
-    public PluginCommand getMgpqCommand( String label ) {
-    	PluginCommand results = null;
-    	
-    	for ( PluginCommand command : commands ) {
-    		if (command.getLabel().equalsIgnoreCase(label)) {
-    			results = command;
-    		}
-		}
-    	return results;
-    }
-    @SuppressWarnings("unchecked") 
-    public void unregisterCommand(String command) {
-        try {
-            ((Map<String, Command>) knownCommands
-                .get(commandMap.get(Bukkit.getServer()))).remove(command);
-            this.commands.removeIf(pluginCommand -> pluginCommand.getLabel().equals(command));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace(); // This should only happen if something's wrong up there.
-        }
-    }
-    
-    private void initCommandMap() {
-        try {
-            commandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            commandMap.setAccessible(true);
-            
-            knownCommands = SimpleCommandMap.class.getDeclaredField("knownCommands");
-            knownCommands.setAccessible(true);
-        } 
-        catch (NoSuchFieldException e) {
-            logError(
-                    "&c&lReflection error: &7Ensure that you're using the latest version of Spigot and Prison.");
-            e.printStackTrace();
-        }
-    }
 }
