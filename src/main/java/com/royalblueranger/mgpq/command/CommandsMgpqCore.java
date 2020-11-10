@@ -29,11 +29,13 @@ public class CommandsMgpqCore
 	
 	
 	@Command( identifier = "pq pets cats",
+			aliases = {"cute kittens", "cats"},
 			onlyPlayers = false )
 	public void pqCatsCommand( CommandSender sender ) {
 		sender.sendMessage( "oof cats" );
 	}
 	@Command( identifier = "pq pets dogs",
+			aliases = {"cute puppies", "dogs", "pq pets doggos"},
 			onlyPlayers = false )
 	public void pqDogsCommand( CommandSender sender ) {
 		sender.sendMessage( "oof dogs" );

@@ -34,20 +34,24 @@ import com.royalblueranger.mgpq.messages.MgpqMessages;
 import com.royalblueranger.mgpq.messages.MgpqMessages.Messages;
 
 
-
-
-public class RegisteredCommand {
+public class RegisteredCommand
+		implements Comparable<RegisteredCommand> {
 
     private String label;
     private CommandHandler handler;
     private RegisteredCommand parent;
+    private boolean alias = false;
     
     private String description;
     private String[] permissions;
     private String[] altPermissions;
+    private String[] aliases;
+    private List<RegisteredCommand> registeredAliases;
+    private RegisteredCommand parentOfAlias;
+    
     private boolean onlyPlayers;
     private Method method;
-    private Object methodInstance;
+    private BaseCommands methodInstance;
 
     private boolean set = false;
 
@@ -63,12 +67,37 @@ public class RegisteredCommand {
     private Map<String, RegisteredCommand> suffixesByName = new HashMap<String, RegisteredCommand>();
 
     
-    RegisteredCommand(String label, CommandHandler handler, RegisteredCommand parent) {
+    public RegisteredCommand(String label, CommandHandler handler, RegisteredCommand parent) {
         this.label = label;
         this.handler = handler;
         this.parent = parent;
+        
+        this.registeredAliases = new ArrayList<>();
     }
 
+    protected static RegisteredCommand junitTest( String jUnitUsage ) {
+    	RegisteredCommand results = new RegisteredCommand( jUnitUsage );
+    	
+    	return results;
+    }
+    
+    @Override
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append( getUsage() )
+    			.append( "  isRoot: " ).append( this instanceof RootCommand )
+    			.append( "  isAlias: " ).append( isAlias() )
+    			.append( "  suffixCnt: " ).append( getSuffixes().size() )
+    			.append( "  hasAliasParent: " ).append( getParentOfAlias() != null );
+    	
+    	if ( getParentOfAlias() != null ) {
+    		sb.append( " (" ).append( getParentOfAlias().getUsage() ).append( ")" );
+    	}
+    	
+    	return sb.toString();
+    }
+    
     /**
      * The suffix is converted to all lower case before adding to the map.
      *  
@@ -84,7 +113,7 @@ public class RegisteredCommand {
      * The suffix is converted to all lower case before checking to see if it exists in the map.
      * 
      * @param suffix
-     * @return
+     * @return if the suffix exists
      */
     boolean doesSuffixCommandExist(String suffix) {
         return suffixesByName.containsKey( suffix.toLowerCase() );
@@ -175,7 +204,7 @@ public class RegisteredCommand {
 
         try {
             try {
-                method.invoke(methodInstance, resultArgs.toArray());
+                method.invoke(getMethodInstance(), resultArgs.toArray());
             } 
             catch ( IllegalArgumentException | InvocationTargetException e) {
                 if (e.getCause() instanceof CommandError) {
@@ -194,16 +223,16 @@ public class RegisteredCommand {
     				
     				for ( Object arg : resultArgs ) {
     					sb.append( "[" );
-    					sb.append( arg );
+    					sb.append( arg.toString() );
     					sb.append( "] " );
     				}
 
                 	String message = "RegisteredCommand.executeMethod(): Invoke error: [" +
                 				e.getMessage() + "] cause: [" +
                 				(e.getCause() == null ? "" : e.getCause().getMessage()) + "] " + 
-                				" target instance: [" +
-                				method.getName() + " " + method.getParameterCount() + " " + 
-                				methodInstance.getClass().getCanonicalName() + "] " +
+                				" target instance: [methodName= " +
+                				method.getName() + "  parmCnt=" + method.getParameterCount() + "  methodInstance=" + 
+                				getMethodInstance().getClass().getCanonicalName() + "] " +
                 				"command arguments: " + sb.toString()
                 				;
                 	
@@ -265,7 +294,14 @@ public class RegisteredCommand {
         return parent;
     }
 
-    public String[] getPermissions() {
+    public boolean isAlias() {
+		return alias;
+	}
+	public void setAlias( boolean alias ) {
+		this.alias = alias;
+	}
+
+	public String[] getPermissions() {
         return permissions;
     }
 
@@ -273,7 +309,26 @@ public class RegisteredCommand {
 		return altPermissions;
 	}
 
-    public RegisteredCommand getSuffixCommand(String suffix) {
+    public String[] getAliases() {
+		return aliases;
+	}
+
+	public List<RegisteredCommand> getRegisteredAliases() {
+		return registeredAliases;
+	}
+	
+	public RegisteredCommand getParentOfAlias() {
+		return parentOfAlias;
+	}
+	public void setParentOfAlias( RegisteredCommand parentOfAlias ) {
+		this.parentOfAlias = parentOfAlias;
+	}
+
+	private Object getMethodInstance() {
+		return methodInstance;
+	}
+
+	public RegisteredCommand getSuffixCommand(String suffix) {
         return suffixesByName.get(suffix);
     }
 
@@ -305,15 +360,18 @@ public class RegisteredCommand {
         sender.sendMessage(getHelpMessage());
     }
 
-    void set(Object methodInstance, Method method) {
+    void set( BaseCommands methodInstance, Method method) {
         this.methodInstance = methodInstance;
         this.method = method;
         method.setAccessible(true);
         Command command = method.getAnnotation(Command.class);
         Flags flagsAnnotation = method.getAnnotation(Flags.class);
         this.description = command.description();
+
         this.permissions = command.permissions();
         this.altPermissions = command.altPermissions();
+        this.aliases = command.aliases();
+        
         this.onlyPlayers = command.onlyPlayers();
 
         Class<?>[] methodParameters = method.getParameterTypes();
@@ -439,5 +497,12 @@ public class RegisteredCommand {
 
         return handler.getPermissionHandler().hasPermission(sender, permissions);
     }
+
+
+	@Override
+	public int compareTo( RegisteredCommand arg0 )
+	{
+		return getUsage().compareTo( arg0.getUsage() );
+	}
 
 }
