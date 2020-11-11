@@ -42,6 +42,8 @@ public class RegisteredCommand
     private RegisteredCommand parent;
     private boolean alias = false;
     
+    private String junitTest = null;
+    
     private String description;
     private String[] permissions;
     private String[] altPermissions;
@@ -75,6 +77,20 @@ public class RegisteredCommand
         this.registeredAliases = new ArrayList<>();
     }
 
+    /**
+     * For JUnit testing ONLY!  Never use for anything else!
+     */
+    private RegisteredCommand( String jUnitUsage ) {
+    	
+    	this.junitTest = jUnitUsage;
+    	
+    	this.label = "junitTest";
+    	this.handler = null;
+    	this.parent = null;
+    	
+    	this.registeredAliases = new ArrayList<>();
+    }
+    
     protected static RegisteredCommand junitTest( String jUnitUsage ) {
     	RegisteredCommand results = new RegisteredCommand( jUnitUsage );
     	
@@ -337,7 +353,10 @@ public class RegisteredCommand
     }
 
     public String getUsage() {
-        return handler.getHelpHandler().getUsage(this);
+        return 
+        		junitTest == null ?
+        				handler.getHelpHandler().getUsage(this) : 
+        				junitTest;
     }
 
     public WildcardArgument getWildcard() {

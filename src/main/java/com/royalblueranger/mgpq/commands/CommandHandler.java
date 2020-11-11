@@ -71,6 +71,7 @@ public class CommandHandler {
 	private Field knownCommands;
 	private Field commandMap;
 
+	private TabCompleaterData tabCompleaterData;
     
 
     public CommandHandler( RBRPlugIn plugin ) {
@@ -78,6 +79,8 @@ public class CommandHandler {
 
         this.registeredCommands = new TreeMap<>();
         this.allRegisteredCommands = new TreeSet<>();
+        
+        this.tabCompleaterData = new TabCompleaterData();
         
         
         registerArgumentHandler(String.class, new StringArgumentHandler());
@@ -141,6 +144,38 @@ public class CommandHandler {
     				}
     				return onCommand( sender, command, commandLabel, args);
     			}
+    			
+    			@Override
+				public List<String> tabComplete( CommandSender sender, String alias, String[] args )
+						throws IllegalArgumentException
+				{
+    				
+    				List<String> results = getTabCompleaterData().check( alias, args );
+    				
+    				
+//    				StringBuilder sb = new StringBuilder();
+//    				for ( String arg : args ) {
+//    					sb.append( "[" ).append( arg ).append( "] " );
+//    				}
+//    				
+//    				StringBuilder sbR = new StringBuilder();
+//    				for ( String result : results ) {
+//    					sbR.append( "[" ).append( result ).append( "] " );
+//    				}
+//
+//    				plugin.logDebug( "### registerCommand: Command.tabComplete() : alias= %s  args= %s   results= %s", 
+//    						alias, sb.toString(), sbR.toString() );
+
+    				
+    				return results;
+				}
+    			
+    			@Override
+				public List<String> tabComplete( CommandSender sender, String alias, String[] args, Location location )
+						throws IllegalArgumentException
+				{
+    				return tabComplete( sender, alias, args );
+				}
     		};
     		
     		
@@ -630,7 +665,10 @@ public class CommandHandler {
         	RootCommand rootRegisteredCommand = new RootCommand( rootPluginCommand, this );
         	rootRegisteredCommand.setAlias( alias != null );
         	
+        	// Must add all new RegisteredCommand objects to both getAllRegisteredCommands() and
+        	// getTabCompleterData().
         	getAllRegisteredCommands().add( rootRegisteredCommand );
+        	getTabCompleaterData().add( rootRegisteredCommand );
         	
         	getRootCommands().put( rootPluginCommand, rootRegisteredCommand );
         }
@@ -647,7 +685,10 @@ public class CommandHandler {
                 newCommand.setAlias( alias != null );
                 mainCommand.addSuffixCommand(suffix, newCommand);
                 
+                // Must add all new RegisteredCommand objects to both getAllRegisteredCommands() and
+                // getTabCompleterData().
                 getAllRegisteredCommands().add( newCommand );
+                getTabCompleaterData().add( newCommand );
 
                 mainCommand = newCommand;
             }
