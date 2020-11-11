@@ -365,10 +365,17 @@ public class CommandHandler {
                 	String subCommands = (subCmdSubCnt <= 1 ? "" : 
             							ChatColor.DARK_AQUA + "(" + subCmdSubCnt + " Subcommands)");
                 	
-                	String isAlias = scommand.isAlias() ? ChatColor.DARK_AQUA + "  Alias" : "";
+                	String subCmdAlias = buildHelpAliasMessage( subCmd, 
+                						(scommand.isAlias() ? scommand.getParentOfAlias().getUsage() : ""), 
+                						null, // (scommand.isAlias() ? ChatColor.DARK_AQUA + " Alias" : ""),
+                						subCommands);
                 	
-                	subCommandSet.add(  
-                			String.format( "%s %s %s", subCmd, subCommands, isAlias ));
+                	subCommandSet.add( subCmdAlias );
+                	
+//                	String isAlias = scommand.isAlias() ? ChatColor.DARK_AQUA + "  Alias" : "";
+//                	
+//                	subCommandSet.add(  
+//                			String.format( "%s %s %s", subCmd, subCommands, isAlias ));
                 }
                 
                 for (String subCmd : subCommandSet) {
@@ -489,21 +496,44 @@ public class CommandHandler {
 //			
 //		}
 
+		
+		private String buildHelpAliasMessage( String usagePrimary, String usageSecondary, 
+								String centerText, String suffix ) {
+			
+			StringBuilder sbAliases = new StringBuilder();
+			
+			if ( usageSecondary != null && usageSecondary.trim().length() > 0 ) {
+				sbAliases.append( ChatColor.DARK_BLUE ).append( "(" ).append( ChatColor.AQUA )
+							.append( usageSecondary )
+							.append( ChatColor.DARK_BLUE ).append( ")" );
+			}
+
+			String rootCmd = 
+					String.format( "%s %s %s %s", 
+							usagePrimary,
+							( centerText == null || centerText.trim().length() == 0 ? "" : centerText ),
+							sbAliases.toString(),
+							( suffix == null || suffix.trim().length() == 0 ? "" : suffix ) );
+
+			return rootCmd;
+		}
+		
 		private void buildHelpAliasMessage( RegisteredCommand registeredCommand, TreeSet<String> aliasesSet ) {
 			if ( registeredCommand.isAlias() && registeredCommand.getParentOfAlias() != null) {
 
-				StringBuilder sbAliases = new StringBuilder();
-				
-				sbAliases.append( ChatColor.DARK_BLUE ).append( "(" ).append( ChatColor.AQUA )
-				.append( registeredCommand.getParentOfAlias().getUsage() )
-				.append( ChatColor.DARK_BLUE ).append( ")" );
+//				StringBuilder sbAliases = new StringBuilder();
+//				
+//				sbAliases.append( ChatColor.DARK_BLUE ).append( "(" ).append( ChatColor.AQUA )
+//							.append( registeredCommand.getParentOfAlias().getUsage() )
+//							.append( ChatColor.DARK_BLUE ).append( ")" );
+//
+//				String rootCmd = 
+//						String.format( "%s  %s", 
+//								registeredCommand.getUsage(),
+//								sbAliases.toString() );
 
-				String rootCmd = 
-						String.format( "%s  %s", 
-								registeredCommand.getUsage(),
-								sbAliases.toString() );
-
-				aliasesSet.add( rootCmd );
+				aliasesSet.add( buildHelpAliasMessage( registeredCommand.getUsage(), 
+											registeredCommand.getParentOfAlias().getUsage(), null, null ) );
 			}
 		}
 
