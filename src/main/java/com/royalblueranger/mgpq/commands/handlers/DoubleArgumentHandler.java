@@ -25,23 +25,24 @@ import com.royalblueranger.mgpq.commands.TransformError;
 import com.royalblueranger.mgpq.messages.MgpqMessages;
 import com.royalblueranger.mgpq.messages.MgpqMessages.Messages;
 
-public class DoubleArgumentHandler extends NumberArgumentHandler<Double> {
+public class DoubleArgumentHandler 
+		extends NumberArgumentHandler<Double> {
 
     public DoubleArgumentHandler() {
     }
 
     @Override public Double transform(CommandSender sender, CommandArgument argument, String value)
         throws TransformError {
-        value = value.replace("$", "");
-        value = value.replace("%", "");
+        value = value.replace("$|%", "");
         try {
+//        	if ( value == null || value.trim().length() == 0 ) {
+//        		return null;
+//        	}
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
             throw new TransformError(
             		MgpqMessages.getMessage( sender, Messages.mgpq_commands_numberParseError, 
             				value )
-//                Prison.get().getLocaleManager().getLocalizable("numberParseError")
-//                    .withReplacements(value).localizeFor(sender)
                     );
         }
     }

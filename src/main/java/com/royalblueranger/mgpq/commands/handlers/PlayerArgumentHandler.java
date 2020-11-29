@@ -41,8 +41,6 @@ public class PlayerArgumentHandler extends ArgumentHandler<Player> {
                     throw new CommandError(
                     		MgpqMessages.getMessage( sender, 
                         			Messages.mgpq_commands_invalidAsConsole )
-//                        Prison.get().getLocaleManager().getLocalizable("cantAsConsole")
-//                            .localizeFor(sender)
                             );
                 }
 
@@ -51,7 +49,8 @@ public class PlayerArgumentHandler extends ArgumentHandler<Player> {
         });
     }
 
-    @Override public Player transform(CommandSender sender, CommandArgument argument, String value)
+    @Override 
+    public Player transform(CommandSender sender, CommandArgument argument, String value)
         throws TransformError {
     	Player results = null;
     	
@@ -68,9 +67,5 @@ public class PlayerArgumentHandler extends ArgumentHandler<Player> {
     	results = (Player) sender;
     	
     	return results;
-    	
-//        return Prison.get().getPlatform().getPlayer(value).orElseThrow(() -> new TransformError(
-//            Prison.get().getLocaleManager().getLocalizable("playerNotOnline")
-//                .withReplacements(value).localizeFor(sender)));
     }
 }

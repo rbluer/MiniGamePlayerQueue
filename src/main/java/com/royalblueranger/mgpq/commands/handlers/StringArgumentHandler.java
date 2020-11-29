@@ -28,7 +28,8 @@ import com.royalblueranger.mgpq.commands.TransformError;
 import com.royalblueranger.mgpq.messages.MgpqMessages;
 import com.royalblueranger.mgpq.messages.MgpqMessages.Messages;
 
-public class StringArgumentHandler extends ArgumentHandler<String> {
+public class StringArgumentHandler 
+		extends ArgumentHandler<String> {
 
     public StringArgumentHandler() {
         addVerifier("min", new ArgumentVerifier<String>() {
@@ -46,9 +47,6 @@ public class StringArgumentHandler extends ArgumentHandler<String> {
                         	MgpqMessages.getMessage( sender, 
                             			Messages.mgpq_commands_tooFewCharacters,
                             			valueRaw, String.valueOf(min) )
-//                            Prison.get().getLocaleManager().getLocalizable("tooFewCharacters")
-//                                .withReplacements(valueRaw, String.valueOf(min))
-//                                .localizeFor(sender)
                                 );
                     }
                 } catch (NumberFormatException e) {
@@ -72,9 +70,6 @@ public class StringArgumentHandler extends ArgumentHandler<String> {
                         	MgpqMessages.getMessage( sender, 
                             			Messages.mgpq_commands_tooManyCharacters,
                             			valueRaw, String.valueOf(max) )
-//                            Prison.get().getLocaleManager().getLocalizable("tooManyCharacters")
-//                                .withReplacements(valueRaw, String.valueOf(max))
-//                                .localizeFor(sender)
                                 );
                     }
                 } catch (NumberFormatException e) {
@@ -84,7 +79,8 @@ public class StringArgumentHandler extends ArgumentHandler<String> {
         });
     }
 
-    @Override public String transform(CommandSender sender, CommandArgument argument, String value)
+    @Override 
+    public String transform(CommandSender sender, CommandArgument argument, String value)
         throws TransformError {
         return value;
     }

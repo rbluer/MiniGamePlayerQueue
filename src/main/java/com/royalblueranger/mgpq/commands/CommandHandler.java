@@ -40,7 +40,11 @@ import org.bukkit.entity.Player;
 import com.royalblueranger.mgpq.MiniGamePlayerQueue;
 import com.royalblueranger.mgpq.RBRPlugIn;
 import com.royalblueranger.mgpq.commands.handlers.DoubleArgumentHandler;
+import com.royalblueranger.mgpq.commands.handlers.DoubleClassArgumentHandler;
 import com.royalblueranger.mgpq.commands.handlers.IntegerArgumentHandler;
+import com.royalblueranger.mgpq.commands.handlers.IntegerClassArgumentandler;
+import com.royalblueranger.mgpq.commands.handlers.LongArgumentHandler;
+import com.royalblueranger.mgpq.commands.handlers.LongClassArgumentHandler;
 import com.royalblueranger.mgpq.commands.handlers.PlayerArgumentHandler;
 import com.royalblueranger.mgpq.commands.handlers.StringArgumentHandler;
 import com.royalblueranger.mgpq.commands.handlers.WorldArgumentHandler;
@@ -83,14 +87,19 @@ public class CommandHandler {
         this.tabCompleaterData = new TabCompleaterData();
         
         
-        registerArgumentHandler(String.class, new StringArgumentHandler());
-        registerArgumentHandler(int.class, new IntegerArgumentHandler());
-        registerArgumentHandler(double.class, new DoubleArgumentHandler());
-        registerArgumentHandler(Player.class, new PlayerArgumentHandler());
-        registerArgumentHandler(World.class, new WorldArgumentHandler());
-//        registerArgumentHandler(BlockType.class, new BlockArgumentHandler());
         
-        
+      registerArgumentHandler(int.class, new IntegerArgumentHandler());
+      registerArgumentHandler(double.class, new DoubleArgumentHandler());
+      registerArgumentHandler(long.class, new LongArgumentHandler());
+      
+      registerArgumentHandler(Integer.class, new IntegerClassArgumentandler());
+      registerArgumentHandler(Double.class, new DoubleClassArgumentHandler());
+      registerArgumentHandler(Long.class, new LongClassArgumentHandler());
+
+      registerArgumentHandler(String.class, new StringArgumentHandler());
+      registerArgumentHandler(Player.class, new PlayerArgumentHandler());
+      registerArgumentHandler(World.class, new WorldArgumentHandler());
+//      registerArgumentHandler(BlockType.class, new BlockArgumentHandler());
     	
         try {
 //        	SimpleCommandMap sCmdMap = new SimpleCommandMap(plugin.getServer());

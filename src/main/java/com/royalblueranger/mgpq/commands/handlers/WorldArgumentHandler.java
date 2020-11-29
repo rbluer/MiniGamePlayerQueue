@@ -30,7 +30,8 @@ import com.royalblueranger.mgpq.commands.TransformError;
 import com.royalblueranger.mgpq.messages.MgpqMessages;
 import com.royalblueranger.mgpq.messages.MgpqMessages.Messages;
 
-public class WorldArgumentHandler extends ArgumentHandler<World> {
+public class WorldArgumentHandler 
+	extends ArgumentHandler<World> {
 
     public WorldArgumentHandler() {
         addVariable("sender", "The command executor", new ArgumentVariable<World>() {
@@ -41,8 +42,6 @@ public class WorldArgumentHandler extends ArgumentHandler<World> {
                     throw new CommandError(
                     		MgpqMessages.getMessage( sender, 
                         			Messages.mgpq_commands_invalidAsConsole )
-//                        Prison.get().getLocaleManager().getLocalizable("cantAsConsole")
-//                            .localizeFor(sender)
                             );
                 }
 
@@ -51,7 +50,8 @@ public class WorldArgumentHandler extends ArgumentHandler<World> {
         });
     }
 
-    @Override public World transform(CommandSender sender, CommandArgument argument, String value)
+    @Override 
+    public World transform(CommandSender sender, CommandArgument argument, String value)
         throws TransformError {
     	World results = null;
     	
@@ -70,9 +70,6 @@ public class WorldArgumentHandler extends ArgumentHandler<World> {
                 			Messages.mgpq_commands_worldNotFound, value )
     				);
     		
-//    		return Prison.get().getPlatform().getWorld(value).orElseThrow(() -> new TransformError(
-//    				Prison.get().getLocaleManager().getLocalizable("worldNotFound").withReplacements(value)
-//    				.localizeFor(sender)));
     	}
         
         return results;

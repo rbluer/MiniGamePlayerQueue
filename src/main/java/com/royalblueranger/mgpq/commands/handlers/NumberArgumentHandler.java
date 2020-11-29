@@ -45,9 +45,6 @@ public abstract class NumberArgumentHandler<T extends Number> extends ArgumentHa
                         	MgpqMessages.getMessage( sender, 
                         			Messages.mgpq_commands_numberTooLow, 
                             		verifyArgs[0], String.valueOf(min) )
-//                            Prison.get().getLocaleManager().getLocalizable("numberTooLow")
-//                                .withReplacements(verifyArgs[0], String.valueOf(min))
-//                                .localizeFor(sender)
                                 );
                     }
                 } catch (NumberFormatException e) {
@@ -71,9 +68,6 @@ public abstract class NumberArgumentHandler<T extends Number> extends ArgumentHa
                         	MgpqMessages.getMessage( sender, 	
                         			Messages.mgpq_commands_numberTooHigh, 
                         			verifyArgs[0], String.valueOf(max) )
-//                            Prison.get().getLocaleManager().getLocalizable("numberTooHigh")
-//                                .withReplacements(verifyArgs[0], String.valueOf(max))
-//                                .localizeFor(sender)
                                 );
                     }
                 } catch (NumberFormatException e) {
@@ -99,9 +93,6 @@ public abstract class NumberArgumentHandler<T extends Number> extends ArgumentHa
                         		MgpqMessages.getMessage( sender, 	
                             			Messages.mgpq_commands_numberRangeError, 
                             			valueRaw, verifyArgs[0], verifyArgs[1] )
-//                            Prison.get().getLocaleManager().getLocalizable("numberRangeError")
-//                                .withReplacements(valueRaw, verifyArgs[0], verifyArgs[1])
-//                                .localizeFor(sender)
                                 );
                     }
                 } catch (NumberFormatException e) {

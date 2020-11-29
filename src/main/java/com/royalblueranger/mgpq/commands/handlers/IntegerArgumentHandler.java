@@ -25,7 +25,8 @@ import com.royalblueranger.mgpq.commands.TransformError;
 import com.royalblueranger.mgpq.messages.MgpqMessages;
 import com.royalblueranger.mgpq.messages.MgpqMessages.Messages;
 
-public class IntegerArgumentHandler extends NumberArgumentHandler<Integer> {
+public class IntegerArgumentHandler 
+		extends NumberArgumentHandler<Integer> {
 
     public IntegerArgumentHandler() {
     }
@@ -38,8 +39,6 @@ public class IntegerArgumentHandler extends NumberArgumentHandler<Integer> {
             throw new TransformError(
             	MgpqMessages.getMessage( sender, 
                 			Messages.mgpq_commands_numberParseError, value )
-//                Prison.get().getLocaleManager().getLocalizable("numberParseError")
-//                    .withReplacements(value).localizeFor(sender)
             	);
         }
     }
