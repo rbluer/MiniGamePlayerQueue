@@ -33,7 +33,7 @@ public class DoubleArgumentHandler
 
     @Override public Double transform(CommandSender sender, CommandArgument argument, String value)
         throws TransformError {
-        value = value.replace("$|%", "");
+        value = value.replaceAll("$|%", "");
         try {
 //        	if ( value == null || value.trim().length() == 0 ) {
 //        		return null;

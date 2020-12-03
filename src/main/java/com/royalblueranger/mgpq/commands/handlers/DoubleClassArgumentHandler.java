@@ -20,7 +20,7 @@ public class DoubleClassArgumentHandler
     
     	if ( value != null ) {
     		
-    		value = value.replace("$|%", "");
+    		value = value.replaceAll("$|%", "");
     		if ( value.trim().length() > 0 ) {
     			try {
     				results = Double.parseDouble(value);
