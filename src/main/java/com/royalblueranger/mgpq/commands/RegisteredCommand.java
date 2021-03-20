@@ -140,6 +140,16 @@ public class RegisteredCommand
     			(label == null ? "-noCommandLabelDefined-" : label) ;
     }
 
+    /**
+     * <p>This will take the args list and try to find the command that was registered
+     * with this command handler.  What should be noted is that if the given arguments
+     * could not be resolved, then it strips off the first arg, then recursively 
+     * tries again. 
+     * </p>
+     * 
+     * @param sender
+     * @param args
+     */
     void execute(CommandSender sender, String[] args) {
         if (!testPermission(sender)) {
         	sender.sendMessage( 
@@ -171,7 +181,9 @@ public class RegisteredCommand
             if (command == null) {
                 
                 executeMethod(sender, args);
-            } else {
+            } 
+            else {
+            	// Strip first arg, then recursively try again
                 String[] nargs = new String[args.length - 1];
                 System.arraycopy(args, 1, nargs, 0, args.length - 1);
                 command.execute(sender, nargs);
@@ -251,6 +263,11 @@ public class RegisteredCommand
                 				getMethodInstance().getClass().getCanonicalName() + "] " +
                 				"command arguments: " + sb.toString()
                 				;
+                	
+                	// Warning: if the args contains a % then the following sendError will fail because 
+                	//          the % will be treated as String.format() placeholders.  So to be safe and
+                	//          to prevent this failure, escape all % with a double % such as %%.
+                	message = message.replace( "%", "%%" );
                 	
                 	MiniGamePlayerQueue.getInstance().
         				logError( sender, message );
