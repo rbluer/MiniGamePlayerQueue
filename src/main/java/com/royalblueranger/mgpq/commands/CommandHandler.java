@@ -279,7 +279,7 @@ public class CommandHandler {
         public String[] getHelpMessage(RegisteredCommand command) {
             ArrayList<String> message = new ArrayList<String>();
 
-            if (command.isSet()) {
+            if (command.isSet() && command.getDescription() != null && !command.getDescription().isEmpty()) {
                 message.add(ChatColor.DARK_AQUA + command.getDescription());
             }
 
@@ -719,7 +719,8 @@ public class CommandHandler {
             
             if (mainCommand.doesSuffixCommandExist(suffix)) {
                 mainCommand = mainCommand.getSuffixCommand(suffix);
-            } else {
+            } 
+            else {
                 RegisteredCommand newCommand = new RegisteredCommand(suffix, this, mainCommand);
                 newCommand.setAlias( alias != null );
                 mainCommand.addSuffixCommand(suffix, newCommand);
@@ -844,5 +845,40 @@ public class CommandHandler {
     }
  */
     
-    
+    /**
+     * <p>This takes a registered command as entered on the command line and will translate it to the
+     * command that was actually registered.  If attempting to register a command, and bukkit
+     * finds that another plugin already registered that command, it will prefix it with the plugin's
+     * prefix until it is unique.  This function will ensure that we use the registered version
+     * of the command that is specified.
+     * </p>
+     * 
+     * @param command
+     * @return
+     */
+    public String findRegisteredCommand(String command) {
+    	
+    	String[] patternParts = command.split( " " );
+    	
+    	if ( patternParts.length > 0 ) {
+    		String rootPattern = patternParts[0];
+    		
+    		for ( RegisteredCommand cmd : allRegisteredCommands ) {
+    			
+    			if ( cmd.getLabel().equalsIgnoreCase( rootPattern ) ) {
+    				
+    				if ( cmd.isRoot() ) {
+    					
+    					RootCommand rootCommand = (RootCommand) cmd;
+    					if ( rootCommand.getBukkitCommand().getLabelRegistered() != null ) {
+
+    						patternParts[0] = rootCommand.getBukkitCommand().getLabelRegistered();
+    					}
+    				}
+    			}
+    		}
+    	}
+    	
+    	return String.join( " ", patternParts );
+    }
 }
