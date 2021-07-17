@@ -11,3 +11,13 @@ Gradle Read Me
   gradlew build (as normal):: Will build project with the new version to ensure all is good.  If build is good, then you can try to upgrade to the next version.
   
   
+Upgraded Gradle to v7.1.1:
+
+./gradlew wrapper --gradle-version 6.0 -Dorg.gradle.java.home="C:\Program Files\Java\jdk1.8.0_291" 
+./gradlew --version -Dorg.gradle.java.home="C:\Program Files\Java\jdk1.8.0_291" :: Will actually install the new version
+./gradlew8.bat
+
+
+  
+ 
+ 
