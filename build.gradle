@@ -10,20 +10,39 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
+//apply plugin: 'maven'
+//apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 archivesBaseName = 'MiniGamePlayerQueue'
 group = 'com.royalblueranger.mgpq'
 
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = "UTF-8"
+
+ext.targetArchiveClassifier = 'Java1.8'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+
+// Lists all versions of java that are available to the toolchain
+// $ ./gradlew -q javaToolchains
+
+// Specify the java version's location as found in the javaToolchains.
+// $ ./gradlew build -Dorg.gradle.java.home="C:\Program Files\Java\jdk1.8.0_291"
+
+//java {
+//  toolchain {
+//    languageVersion.set(JavaLanguageVersion.of(8))
+////    languageVersion.set(JavaLanguageVersion.of(16))
+//  }
+//}
 
 repositories {
     mavenCentral()
 
-    maven { url "http://maven.sk89q.com/repo/" }
+    maven { url "https://maven.sk89q.com/repo/" }
    //  maven { url "https://mvnrepository.com/artifact/org.apache.commons/commons-lang3" }
 
     maven { url = "https://hub.spigotmc.org/nexus/content/groups/public" }
@@ -85,7 +104,7 @@ dependencies {
     
     compileOnly 'net.milkbowl.vault:VaultAPI:1.6'
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     
 //    compileOnly 'com.github.PrisonTeam:Prison:bleeding-SNAPSHOT'
 //    implementation 'com.github.PrisonTeam:Prison:3.2.6'
@@ -156,6 +175,12 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'plugin.yml', 'config.yml'
     }
+
+    
+    // Need to have includ duplicates for the version to be updated in the plugin.yml file.
+    // Also the final build is actually smaller with include.    
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE // allow duplicates
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // do not allow duplicates
 }
 
 shadowJar {
