@@ -22,6 +22,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+
     maven { url "http://maven.sk89q.com/repo/" }
    //  maven { url "https://mvnrepository.com/artifact/org.apache.commons/commons-lang3" }
 
@@ -44,7 +45,7 @@ repositories {
     // maven { url = "http://repo.mvdw-software.be/content/groups/public/" }
     // maven { url = 'https://maven.enginehub.org/repo/' }
     
-    jcenter()
+    //maven { url = "https://jitpack.io" }
 }
 
 configurations {
@@ -70,6 +71,7 @@ dependencies {
     
     compileOnly 'org.xerial:sqlite-jdbc:3.32.3.2'
     
+    
 //	implementation 'com.github.cryptomorin:XSeries:7.5.4'
 //	implementation 'com.github.cryptomorin:XSeries:7.2.1'
 //	implementation 'com.github.cryptomorin:XSeries:6.3.2.1'
@@ -84,6 +86,10 @@ dependencies {
     compileOnly 'net.milkbowl.vault:VaultAPI:1.6'
 
     testCompile 'junit:junit:4.12'
+    
+//    compileOnly 'com.github.PrisonTeam:Prison:bleeding-SNAPSHOT'
+//    implementation 'com.github.PrisonTeam:Prison:3.2.6'
+    
 }
 
 
