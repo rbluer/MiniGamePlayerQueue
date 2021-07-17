@@ -277,6 +277,13 @@ public class CommandHandler {
 
         @Override 
         public String[] getHelpMessage(RegisteredCommand command) {
+        	
+        	// NOTE: this function was converted over to use ChatDisplay instead of a an ArrayList of messages:
+//            ChatDisplay chatDisplay = new ChatDisplay(
+//            		String.format( "Cmd: &7%s", 
+//            					getUsageNoParameters(command)) );
+
+
             ArrayList<String> message = new ArrayList<String>();
 
             if (command.isSet() && command.getDescription() != null && !command.getDescription().isEmpty()) {
@@ -357,6 +364,16 @@ public class CommandHandler {
                 		
                 		sb.insert( 0, "   " );
                 		message.add( sb.toString() );
+                	}
+                	
+                }
+                
+                if ( command.getDocURLs() != null && command.getDocURLs().length > 0 ) {
+                	message.add(ChatColor.DARK_AQUA + "Documentation:");
+
+                	for ( String docURL : command.getDocURLs() ) {
+                		
+                		message.add( "    " + ChatColor.AQUA + docURL);
                 	}
                 	
                 }
