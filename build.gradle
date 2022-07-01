@@ -73,11 +73,13 @@ configurations {
 
 dependencies {
 
+    implementation 'org.bstats:bstats-base:3.0.0'
+    implementation 'org.bstats:bstats-bukkit:3.0.0'
+    
 //    implementation 'org.apache.commons:commons-lang3:3.10'
 //    implementation 'com.google.guava:guava:19.0'
 //    implementation 'com.google.code.gson:gson:2.8.6'
     
-//    implementation 'org.bstats:bstats-bukkit:1.5'
 //    implementation 'org.inventivetalent.spiget-update:bukkit:1.4.2-SNAPSHOT'
 //	  implementation 'org.apache.commons:commons-lang3:3.9'
 
@@ -185,6 +187,10 @@ processResources {
 
 shadowJar {
     dependencies {
+           
+        include(dependency('org.bstats:bstats-base:3.0.0'))
+        include(dependency('org.bstats:bstats-bukkit:3.0.0'))
+    
 //    	include(dependency('org.xerial:sqlite-jdbc:3.32.3.2'))
     	
 //        include(dependency('com.google.code.gson:gson:2.8.6'))
@@ -194,6 +200,8 @@ shadowJar {
 //        include(dependency('org.inventivetalent.spiget-update:bukkit:1.4.2-SNAPSHOT'))
 //        include(dependency('com.github.cryptomorin:XSeries:7.5.4'))
     }
+
+    relocate 'org.bstats', 'tech.mcprison.prison.bstats'
 
 //    relocate 'org.bstats.bukkit', 'com.royalblueranger.mgpq.spigot'
 //    relocate 'org.inventivetalent.update.spiget', 'com.royalblueranger.mgpq.spiget'
