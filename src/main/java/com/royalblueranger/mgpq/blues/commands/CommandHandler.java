@@ -123,6 +123,9 @@ public class CommandHandler {
         				"&7Ensure that you're using the latest version of Spigot and this plugin.");
         	e.printStackTrace();
         }
+        
+        this.plugin.log( "&3Root command: &7/%s   &3fallback-prefix: &7%s",
+        		DefaultSettings.COMMAND_PRIMARY_ROOT_COMMAND, DefaultSettings.COMMAND_FALLBACK_PREFIX );
     }
 
     
