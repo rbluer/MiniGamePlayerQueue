@@ -199,9 +199,11 @@ shadowJar {
 //        include(dependency('org.bstats:bstats-bukkit:1.5'))
 //        include(dependency('org.inventivetalent.spiget-update:bukkit:1.4.2-SNAPSHOT'))
 //        include(dependency('com.github.cryptomorin:XSeries:7.5.4'))
+
     }
 
-    relocate 'org.bstats', 'tech.mcprison.prison.bstats'
+    relocate 'org.bstats', 'com.royalblueranger.mgpq.blues.shadded.bstats'
+    
 
 //    relocate 'org.bstats.bukkit', 'com.royalblueranger.mgpq.spigot'
 //    relocate 'org.inventivetalent.update.spiget', 'com.royalblueranger.mgpq.spiget'

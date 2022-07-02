@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.royalblueranger.blues.commands.CommandHandler;
+import com.royalblueranger.mgpq.blues.commands.CommandHandler;
 import com.royalblueranger.mgpq.db.SQLite;
 
 

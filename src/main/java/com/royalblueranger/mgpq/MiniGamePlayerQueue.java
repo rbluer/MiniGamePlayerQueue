@@ -1,6 +1,6 @@
 package com.royalblueranger.mgpq;
 
-import com.royalblueranger.blues.bstats.InitializeBstats;
+import com.royalblueranger.mgpq.blues.bstats.InitializeBstats;
 import com.royalblueranger.mgpq.command.CommandsMgpqCore;
 
 /**

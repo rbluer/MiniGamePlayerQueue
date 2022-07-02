@@ -2,9 +2,9 @@ package com.royalblueranger.mgpq.command;
 
 import org.bukkit.command.CommandSender;
 
-import com.royalblueranger.blues.commands.BaseCommands;
-import com.royalblueranger.blues.commands.Command;
 import com.royalblueranger.mgpq.MiniGamePlayerQueue;
+import com.royalblueranger.mgpq.blues.commands.BaseCommands;
+import com.royalblueranger.mgpq.blues.commands.Command;
 
 public class CommandsMgpqCore
 		extends BaseCommands
